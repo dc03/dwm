@@ -61,6 +61,9 @@ static const char *dmenucmd[] = { "dmenu_run", "-b", "-m", dmenumon, "-fn", dmen
 static const char *termcmd[]  = { "st", NULL };
 static const char *roficmd[] = { "rofi", "-modi", "window,drun,run", "-show", "drun", NULL };
 static const char *nautiluscmd[] = { "nautilus", NULL };
+static const char *lockcmd[] = { "xautolock", "-locknow", NULL };
+static const char *memcmd[] = { "/usr/bin/sh", "-c", "polybar-msg action '#memory_placeholder.module_toggle' && polybar-msg action '#memory.module_toggle'", NULL };
+static const char *cpucmd[] = { "/usr/bin/sh", "-c", "polybar-msg action '#cpu_placeholder.module_toggle' && polybar-msg action '#cpu.module_toggle'", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -68,6 +71,9 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
     { MODKEY,                       XK_r,      spawn,          {.v = roficmd } },
     { MODKEY,                       XK_e,      spawn,          {.v = nautiluscmd } },
+    { MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
+    { MODKEY|ShiftMask,             XK_m,      spawn,          {.v = memcmd } },
+    { MODKEY|ShiftMask,             XK_n,      spawn,          {.v = cpucmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
