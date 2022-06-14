@@ -20,6 +20,7 @@ static const char dmenufont[]       = "JetBrains Mono:size=14";
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *defaulttagapps[] = { NULL, NULL, "calibre", NULL, NULL, NULL, "google-chrome", "/home/dc/.local/share/flatpak/exports/bin/com.spotify.Client", "pavucontrol" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -70,6 +71,7 @@ static Key keys[] = {
     { MODKEY,                       XK_r,      spawn,          {.v = roficmd } },
     { MODKEY,                       XK_e,      spawn,          {.v = nautiluscmd } },
     { MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
+	{ MODKEY,                       XK_s,      spawndefault,   {0} },
     { MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
