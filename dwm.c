@@ -258,6 +258,8 @@ static void togglefloating(const Arg *arg);
 static void togglefullscr(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
+static void shiftview(const Arg *arg);
+static void jumpview(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
 static void unmanage(Client *c, int destroyed);
 static void unmanagealtbar(Window w);
@@ -2148,6 +2150,89 @@ toggleview(const Arg *arg)
 		focus(NULL);
 		arrange(selmon);
 	}
+}
+
+/* * Function to shift the current view to the left/right
+   *
+   * @param: "arg->i" stores the number of tags to shift right (positive value)
+   *          or left (negative value)
+*/
+void
+shiftview(const Arg *arg)
+{
+    Arg shifted;
+
+    if(arg->i > 0) // left circular shift
+      {
+        shifted.ui = (selmon->tagset[selmon->seltags] << 1)
+          | (selmon->tagset[selmon->seltags] >> (LENGTH(tags) - 1));
+      }
+    else // right circular shift
+      {
+        shifted.ui = selmon->tagset[selmon->seltags] >> 1
+          | selmon->tagset[selmon->seltags] << (LENGTH(tags) + arg->i);
+      }
+    view(&shifted);
+}
+
+
+/* jumps to the next tag where a window exists */
+void
+jumpview(const Arg *arg)
+{
+    Arg shifted;
+    Client *c;
+    int match = 0;
+
+   if (arg->i > 0)
+     {
+    shifted.ui = (selmon->tagset[selmon->seltags] << 1)
+      | (selmon->tagset[selmon->seltags] >> (LENGTH(tags) - 1));
+
+    while (selmon->clients && match == 0)
+      {
+         for (c = selmon->clients; c; c = c->next)
+           {
+          if (shifted.ui == c->tags)
+            {
+               match = 1;
+            }
+           }
+         if (match == 0)
+           {
+          shifted.ui = shifted.ui << 1;
+          if (shifted.ui > (1 << (LENGTH(tags)-1) ))
+            {
+               shifted.ui = 1;
+            }
+           }
+      }
+     }
+   else
+     {
+    shifted.ui = selmon->tagset[selmon->seltags] >> 1;
+
+    while (selmon->clients && match == 0)
+      {
+         for (c = selmon->clients; c; c = c->next)
+           {
+          if (shifted.ui == c->tags)
+            {
+               match = 1;
+            }
+           }
+         if (match == 0)
+           {
+          shifted.ui = shifted.ui >> 1;
+          if (shifted.ui < 1)
+            {
+               shifted.ui = 1 << (LENGTH(tags) -1);
+            }
+           }
+      }
+     }
+
+   view(&shifted);
 }
 
 void
